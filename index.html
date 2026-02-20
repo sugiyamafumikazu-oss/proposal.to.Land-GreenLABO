@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>御見積書案：土と緑の研究所様 - ネクシオグループ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .section-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .interactive-input {
+            transition: all 0.2s;
+        }
+        .interactive-input:hover {
+            transform: translateY(-1px);
+        }
+        
+        /* 印刷時の用紙設定 */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 15mm;
+            }
+            body {
+                background-color: white;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 antialiased">
+
+    <!-- ========================================== -->
+    <!-- 画面表示用UI（印刷時は非表示） -->
+    <!-- ========================================== -->
+    <div class="print:hidden">
+        <!-- Navigation -->
+        <nav class="bg-slate-800 text-white shadow-lg sticky top-0 z-50">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="font-bold text-xl flex items-center gap-2">
+                    <span class="text-blue-400">◆</span> ネクシオグループ
+                </div>
+                <div class="hidden md:flex space-x-6 text-sm">
+                    <a href="#summary" class="hover:text-blue-300 transition">プロジェクト概要</a>
+                    <a href="#recruitment" class="hover:text-blue-300 transition">人材採用計画</a>
+                    <a href="#visa" class="hover:text-blue-300 transition">ビザ・労務</a>
+                    <button onclick="prepareAndPrint()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-1 rounded transition">御見積シミュレーション</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Header / Introduction -->
+        <header class="bg-white border-b border-slate-200 py-10">
+            <div class="container mx-auto px-4 text-center">
+                <p class="text-slate-500 text-sm mb-2">御見積書案・事業提案書</p>
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">土と緑の研究所 御中</h1>
+                <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                    御殿場研究所および工場設立プロジェクトにおける<br>
+                    人材採用・在留資格申請・労務管理トータルサポートのご提案
+                </p>
+            </div>
+        </header>
+
+        <main class="container mx-auto px-4 py-8 max-w-5xl">
+
+            <!-- Executive Summary Section -->
+            <section id="summary" class="section-card">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-2xl text-blue-600">📋</span>
+                    <h2 class="text-2xl font-bold text-slate-800">1. プロジェクト要件の確認</h2>
+                </div>
+                <p class="mb-6 leading-relaxed">
+                    宋社長とのご面談に基づき、御社の日本進出（御殿場拠点）における優先課題と、弊社が提供するソリューションを整理いたしました。
+                    単なる手続き代行ではなく、採用から定着、助成金活用によるコスト適正化までをワンストップで支援します。
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                        <h3 class="font-bold text-blue-800 mb-2">人材採用 (Recruitment)</h3>
+                        <p class="text-sm text-slate-600">
+                            日中バイリンガルかつ行政手続き・管理業務経験者を募集。
+                            <br><span class="font-bold text-slate-800">想定月給: 27万〜35万円</span>
+                        </p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                        <h3 class="font-bold text-green-800 mb-2">ビザ・在留資格 (Visa)</h3>
+                        <p class="text-sm text-slate-600">
+                            中国本社からの転勤、または新規採用者の就労ビザ取得。資本関係の立証と適切なビザ区分の選定が必要。
+                        </p>
+                    </div>
+                    <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                        <h3 class="font-bold text-orange-800 mb-2">労務・助成金 (Subsidy)</h3>
+                        <p class="text-sm text-slate-600">
+                            日本の解雇規制への対応（有期雇用の活用）およびキャリアアップ助成金等の活用によるコスト圧縮。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recruitment Strategy Section -->
+            <section id="recruitment" class="section-card">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-2xl text-blue-600">👥</span>
+                    <h2 class="text-2xl font-bold text-slate-800">2. 人材採用戦略とコスト試算</h2>
+                </div>
+                <p class="mb-6 text-slate-600">
+                    求める人物像（管理者層）の市場価値と、採用にかかる成功報酬費用のシミュレーションです。
+                    面談での合意事項に基づき、年収の30%を手数料として算出します。
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="font-bold text-center text-slate-700 mb-2">求める人物像（ターゲット）</h3>
+                        <div class="chart-container">
+                            <canvas id="candidateRadar"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-lg border border-slate-200">
+                        <h3 class="font-bold text-slate-800 mb-4 border-b pb-2">採用コストシミュレーター</h3>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-slate-700 mb-2">想定月給（基本給）</label>
+                            <input type="range" id="salaryRange" min="25" max="40" step="1" value="28" class="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-xs text-slate-500 mt-1">
+                                <span>25万円</span>
+                                <span>32.5万円</span>
+                                <span>40万円</span>
+                            </div>
+                            <div class="text-center mt-2">
+                                <span id="salaryDisplay" class="text-3xl font-bold text-blue-600">28</span>
+                                <span class="text-lg font-bold text-slate-700">万円 / 月</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-600">想定年収 (12ヶ月)</span>
+                                <span id="annualSalaryDisplay" class="font-bold">336 万円</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm border-t pt-2">
+                                <span class="text-slate-600">紹介手数料率</span>
+                                <span class="font-bold text-slate-600">30 %</span>
+                            </div>
+                            <div class="flex justify-between items-center text-lg font-bold bg-white p-3 rounded shadow-sm border border-blue-100 mt-2">
+                                <span class="text-blue-800">採用成功報酬</span>
+                                <span id="recruitmentFeeDisplay" class="text-blue-600">1,008,000 円</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dynamic Estimate Section -->
+            <section id="estimate" class="section-card border-t-4 border-blue-600">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-2xl text-blue-600">📊</span>
+                    <h2 class="text-2xl font-bold text-slate-800">3. 概算御見積シミュレーション</h2>
+                </div>
+                <p class="mb-6 text-slate-600 text-sm">
+                    必要な項目を選択してください。助成金活用による実質コストの削減効果もご確認いただけます。<br>
+                    シミュレーション後、下部のボタンから正式な見積書フォーマットで印刷・PDF保存が可能です。
+                </p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Controls -->
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-slate-700 border-b pb-2">サービス選択</h3>
+                        
+                        <label class="flex items-start gap-3 p-3 rounded border hover:bg-slate-50 cursor-pointer interactive-input">
+                            <input type="checkbox" id="chkRecruit" checked class="mt-1 w-5 h-5 text-blue-600 rounded focus:ring-blue-500">
+                            <div>
+                                <span class="font-bold block text-slate-800">人材紹介手数料 (1名)</span>
+                                <span class="text-xs text-slate-500">想定年収の30%。完全成功報酬。</span>
+                            </div>
+                            <div class="ml-auto font-mono text-slate-700" id="valRecruit">1,008,000</div>
+                        </label>
+
+                        <label class="flex items-start gap-3 p-3 rounded border hover:bg-slate-50 cursor-pointer interactive-input">
+                            <input type="checkbox" id="chkVisa" checked class="mt-1 w-5 h-5 text-blue-600 rounded focus:ring-blue-500">
+                            <div>
+                                <span class="font-bold block text-slate-800">就労ビザ申請代行 (1名)</span>
+                                <span class="text-xs text-slate-500">申請書類作成、入管取次、理由書作成。</span>
+                            </div>
+                            <div class="ml-auto font-mono text-slate-700">150,000</div>
+                        </label>
+
+                        <label class="flex items-start gap-3 p-3 rounded border hover:bg-slate-50 cursor-pointer interactive-input">
+                            <input type="checkbox" id="chkSetup" class="mt-1 w-5 h-5 text-blue-600 rounded focus:ring-blue-500">
+                            <div>
+                                <span class="font-bold block text-slate-800">会社設立/支店設置サポート</span>
+                                <span class="text-xs text-slate-500">定款作成、登記支援等。</span>
+                            </div>
+                            <div class="ml-auto font-mono text-slate-700">300,000</div>
+                        </label>
+
+                        <label class="flex items-start gap-3 p-3 rounded border hover:bg-slate-50 cursor-pointer interactive-input">
+                            <input type="checkbox" id="chkAdvisory" checked class="mt-1 w-5 h-5 text-blue-600 rounded focus:ring-blue-500">
+                            <div>
+                                <span class="font-bold block text-slate-800">労務顧問・社会保険手続 (月額)</span>
+                                <span class="text-xs text-slate-500">入退社手続、給与計算、労務相談。</span>
+                            </div>
+                            <div class="ml-auto font-mono text-slate-700">30,000</div>
+                        </label>
+
+                        <div class="mt-6 pt-4 border-t border-dashed border-slate-300">
+                            <label class="flex items-center gap-3 p-3 bg-orange-50 rounded border border-orange-200 cursor-pointer interactive-input">
+                                <input type="checkbox" id="chkSubsidy" checked class="w-5 h-5 text-orange-600 rounded focus:ring-orange-500">
+                                <div>
+                                    <span class="font-bold block text-orange-800">キャリアアップ助成金活用</span>
+                                    <span class="text-xs text-orange-700">正社員化コース（有期→正規）を想定。</span>
+                                </div>
+                                <div class="ml-auto font-mono text-orange-700 font-bold">-800,000</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Visualization -->
+                    <div class="flex flex-col">
+                        <div class="mt-6 bg-slate-800 text-white p-6 rounded-lg shadow-lg">
+                            <div class="flex justify-between items-end mb-3">
+                                <span class="text-sm opacity-80">イニシャルコスト合計 (概算)</span>
+                                <span class="text-2xl font-mono" id="totalInitial">0 円</span>
+                            </div>
+                            <div class="flex justify-between items-end mb-3 text-orange-300">
+                                <span class="text-sm">助成金補填見込</span>
+                                <span class="text-2xl font-mono" id="totalSubsidy">0 円</span>
+                            </div>
+                            <div class="border-t border-slate-600 my-4"></div>
+                            <div class="flex justify-between items-end">
+                                <span class="font-bold text-lg">実質負担額 見込</span>
+                                <span class="text-4xl font-bold font-mono text-blue-300" id="netCost">0 円</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Contact CTA -->
+            <div class="text-center mt-12 mb-8">
+                <p class="text-slate-600 mb-4">
+                    上記シミュレーションの内容で、正式な書面フォーマットにて印刷またはPDF保存が可能です。
+                </p>
+                <button onclick="prepareAndPrint()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-full shadow-lg transition transform hover:scale-105 flex items-center justify-center mx-auto gap-2">
+                    <span>📄</span> 正式見積書をダウンロード (印刷 / PDF)
+                </button>
+            </div>
+        </main>
+        
+        <footer class="bg-slate-800 text-slate-400 py-8 text-center text-sm">
+            <div class="container mx-auto px-4">
+                <p class="mb-2">株式会社ネクシオ / 社会保険労務士法人キャリアデザイン / 行政書士キャリア法務事務所</p>
+                <p>&copy; 2025 Nexio Group. All Rights Reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- 印刷用 見積書テンプレート（画面上は非表示） -->
+    <!-- ========================================== -->
+    <div class="hidden print:block w-full max-w-4xl mx-auto p-4 text-black bg-white">
+        
+        <!-- 見積書ヘッダー -->
+        <div class="flex justify-between items-start mb-12">
+            <div>
+                <h1 class="text-3xl font-bold mb-8 tracking-widest border-b-2 border-black inline-block pb-1">御見積書</h1>
+                <div class="text-xl mb-2">
+                    <span class="font-bold">土と緑の研究所</span> 御中
+                </div>
+                <div class="text-lg">
+                    宋社長 様
+                </div>
+                <p class="mt-8 text-sm">下記の通り、御見積申し上げます。</p>
+            </div>
+
+            <div class="text-right text-sm">
+                <p class="mb-4 font-mono text-base" id="printDate">202X年X月X日</p>
+                
+                <div class="text-left border rounded p-4 bg-gray-50 shadow-sm inline-block min-w-[300px]">
+                    <p class="font-bold text-lg mb-2 text-blue-900 border-b border-gray-300 pb-1">ネクシオグループ</p>
+                    <p class="font-bold">株式会社ネクシオ</p>
+                    <p class="text-xs text-gray-600 mb-2">（有料職業紹介事業・人材派遣事業）</p>
+                    <p class="font-bold">社会保険労務士法人キャリアデザイン</p>
+                    <p class="text-xs text-gray-600 mb-2">（労働・社会保険手続、労務顧問、助成金申請）</p>
+                    <p class="font-bold">行政書士キャリア法務事務所</p>
+                    <p class="text-xs text-gray-600">（在留資格認定証明書交付申請等）</p>
+                    
+                    <div class="mt-4 pt-2 border-t border-gray-300 text-xs text-gray-600">
+                        ※本紙は御殿場拠点設立に向けたグループ総合提案の概算見積となります。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 合計金額 -->
+        <div class="flex justify-between items-end border-b-2 border-black pb-2 mb-8 px-2">
+            <span class="text-lg font-bold">御見積合計金額（実質負担見込額）</span>
+            <div class="flex items-baseline gap-2">
+                <span class="text-3xl font-bold font-mono" id="printNetTotal">¥0-</span>
+                <span class="text-sm">（税別）</span>
+            </div>
+        </div>
+
+        <!-- 明細表 -->
+        <table class="w-full border-collapse mb-8 text-sm">
+            <thead>
+                <tr class="bg-gray-100 border-y-2 border-black">
+                    <th class="py-3 px-4 text-left font-bold">業務内容 / 項目</th>
+                    <th class="py-3 px-4 text-right font-bold w-48">金額（税別）</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody">
+                <!-- JSで動的に追加 -->
+            </tbody>
+            <tfoot>
+                <tr class="border-t-2 border-black font-bold">
+                    <td class="py-3 px-4 text-right bg-gray-50">小計（イニシャルコスト）</td>
+                    <td class="py-3 px-4 text-right bg-gray-50 font-mono text-lg" id="printTotalInitial">¥0</td>
+                </tr>
+                <tr id="printSubsidyRow" class="text-red-700 bg-red-50 border-b border-gray-300">
+                    <td class="py-3 px-4 text-right">キャリアアップ助成金 受給見込額（控除）</td>
+                    <td class="py-3 px-4 text-right font-mono text-lg" id="printSubsidyAmount">-¥0</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- 備考欄 -->
+        <div class="border rounded p-4 text-xs text-gray-700 bg-gray-50">
+            <p class="font-bold mb-2">【備考・注意事項】</p>
+            <ul class="list-disc list-inside space-y-1">
+                <li id="printNoteRecruit">人材紹介手数料は、採用決定者の「初年度理論年収の30%」となります。上記はシミュレーションに基づく概算額です。</li>
+                <li>顧問契約以外の各手続き（ビザ申請・会社設立等）はスポット契約となります。</li>
+                <li>キャリアアップ助成金等の国・自治体の助成金は、法定要件を満たし審査を通過した後に支給されるものであり、支給を確約するものではありません。</li>
+                <li>助成金申請手続きを弊社（社会保険労務士法人）に委託される場合、受給額に対する成功報酬（別途お見積り）が発生いたします。</li>
+                <li>本見積書の有効期限は、発行日より1ヶ月といたします。</li>
+            </ul>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- Scripts -->
+    <!-- ========================================== -->
+    <script>
+        // --- Data & State ---
+        const prices = {
+            recruitRate: 0.30,
+            visa: 150000,
+            setup: 300000,
+            advisory: 30000,
+            subsidy: 800000
+        };
+
+        const state = {
+            salary: 280000,
+            recruitFee: 0,
+            includeRecruit: true,
+            includeVisa: true,
+            includeSetup: false,
+            includeAdvisory: true,
+            applySubsidy: true
+        };
+
+        const els = {
+            salaryRange: document.getElementById('salaryRange'),
+            salaryDisplay: document.getElementById('salaryDisplay'),
+            annualDisplay: document.getElementById('annualSalaryDisplay'),
+            recruitFeeDisplay: document.getElementById('recruitmentFeeDisplay'),
+            valRecruit: document.getElementById('valRecruit'),
+            chkRecruit: document.getElementById('chkRecruit'),
+            chkVisa: document.getElementById('chkVisa'),
+            chkSetup: document.getElementById('chkSetup'),
+            chkAdvisory: document.getElementById('chkAdvisory'),
+            chkSubsidy: document.getElementById('chkSubsidy'),
+            totalInitial: document.getElementById('totalInitial'),
+            totalSubsidy: document.getElementById('totalSubsidy'),
+            netCost: document.getElementById('netCost')
+        };
+
+        function initCharts() {
+            const ctxRadar = document.getElementById('candidateRadar').getContext('2d');
+            new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['日本語能力', '中国語能力', '管理業務経験', 'PCスキル', '御殿場近隣', '行政知識'],
+                    datasets: [{
+                        label: '理想の候補者像',
+                        data: [9, 9, 8, 7, 6, 8],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { r: { beginAtZero: true, max: 10, ticks: { display: false } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function formatCurrency(num) {
+            return num.toLocaleString('ja-JP');
+        }
+
+        function updateCalculations() {
+            state.salary = parseInt(els.salaryRange.value) * 10000;
+            const annualSalary = state.salary * 12;
+            state.recruitFee = annualSalary * prices.recruitRate;
+
+            els.salaryDisplay.textContent = els.salaryRange.value;
+            els.annualDisplay.textContent = formatCurrency(annualSalary) + ' 円';
+            els.recruitFeeDisplay.textContent = formatCurrency(state.recruitFee) + ' 円';
+            els.valRecruit.textContent = formatCurrency(state.recruitFee);
+
+            state.includeRecruit = els.chkRecruit.checked;
+            state.includeVisa = els.chkVisa.checked;
+            state.includeSetup = els.chkSetup.checked;
+            state.includeAdvisory = els.chkAdvisory.checked;
+            state.applySubsidy = els.chkSubsidy.checked;
+
+            let recruitCost = state.includeRecruit ? state.recruitFee : 0;
+            let legalCost = (state.includeVisa ? prices.visa : 0);
+            let otherCost = (state.includeSetup ? prices.setup : 0) + (state.includeAdvisory ? prices.advisory : 0);
+            
+            let totalInitial = recruitCost + legalCost + otherCost;
+            let subsidyAmount = state.applySubsidy ? prices.subsidy : 0;
+            let netCost = totalInitial - subsidyAmount;
+
+            els.totalInitial.textContent = formatCurrency(totalInitial) + ' 円';
+            els.totalSubsidy.textContent = '-' + formatCurrency(subsidyAmount) + ' 円';
+            els.netCost.textContent = formatCurrency(netCost) + ' 円';
+        }
+
+        // --- 印刷用データの生成と印刷実行 ---
+        function prepareAndPrint() {
+            // 現在の日付をセット
+            const today = new Date();
+            const dateString = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+            document.getElementById('printDate').textContent = dateString;
+
+            // 明細テーブルの構築
+            const tbody = document.getElementById('printTableBody');
+            tbody.innerHTML = '';
+            let totalInitial = 0;
+
+            if (state.includeRecruit) {
+                const annual = formatCurrency(state.salary * 12);
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-200">
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-base">人材紹介手数料（1名）</div>
+                            <div class="text-xs text-gray-500 mt-1">想定年収 ${annual}円 の 30%（完全成功報酬）</div>
+                        </td>
+                        <td class="py-3 px-4 text-right font-mono text-base">¥${formatCurrency(state.recruitFee)}</td>
+                    </tr>`;
+                totalInitial += state.recruitFee;
+                document.getElementById('printNoteRecruit').style.display = 'list-item';
+            } else {
+                document.getElementById('printNoteRecruit').style.display = 'none';
+            }
+
+            if (state.includeVisa) {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-200">
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-base">就労ビザ等 在留資格申請手続代行（1名）</div>
+                            <div class="text-xs text-gray-500 mt-1">「企業内転勤」または「技術・人文知識・国際業務」等。理由書作成含む。</div>
+                        </td>
+                        <td class="py-3 px-4 text-right font-mono text-base">¥${formatCurrency(prices.visa)}</td>
+                    </tr>`;
+                totalInitial += prices.visa;
+            }
+
+            if (state.includeSetup) {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-200">
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-base">日本拠点 設立支援サポート</div>
+                            <div class="text-xs text-gray-500 mt-1">定款作成、登記支援（司法書士連携）等</div>
+                        </td>
+                        <td class="py-3 px-4 text-right font-mono text-base">¥${formatCurrency(prices.setup)}</td>
+                    </tr>`;
+                totalInitial += prices.setup;
+            }
+
+            if (state.includeAdvisory) {
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-200">
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-base">労務顧問・社会保険手続代行（月額）</div>
+                            <div class="text-xs text-gray-500 mt-1">従業員の入退社手続、労務相談、法改正対応等</div>
+                        </td>
+                        <td class="py-3 px-4 text-right font-mono text-base">¥${formatCurrency(prices.advisory)}</td>
+                    </tr>`;
+                totalInitial += prices.advisory;
+            }
+
+            if (tbody.innerHTML === '') {
+                tbody.innerHTML = `<tr><td colspan="2" class="py-4 text-center text-gray-500">項目が選択されていません</td></tr>`;
+            }
+
+            // 金額の反映
+            document.getElementById('printTotalInitial').textContent = `¥${formatCurrency(totalInitial)}`;
+
+            let netTotal = totalInitial;
+            const printSubsidyRow = document.getElementById('printSubsidyRow');
+            
+            if (state.applySubsidy) {
+                document.getElementById('printSubsidyAmount').textContent = `-¥${formatCurrency(prices.subsidy)}`;
+                printSubsidyRow.style.display = 'table-row';
+                netTotal -= prices.subsidy;
+            } else {
+                printSubsidyRow.style.display = 'none';
+            }
+
+            document.getElementById('printNetTotal').textContent = `¥${formatCurrency(netTotal)}-`;
+
+            // ブラウザの印刷ダイアログを呼び出し
+            window.print();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            updateCalculations();
+
+            els.salaryRange.addEventListener('input', updateCalculations);
+            els.chkRecruit.addEventListener('change', updateCalculations);
+            els.chkVisa.addEventListener('change', updateCalculations);
+            els.chkSetup.addEventListener('change', updateCalculations);
+            els.chkAdvisory.addEventListener('change', updateCalculations);
+            els.chkSubsidy.addEventListener('change', updateCalculations);
+        });
+
+    </script>
+</body>
+</html>
